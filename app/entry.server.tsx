@@ -17,7 +17,7 @@ function handleBotRequest(
     let didError = false
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const { pipe, abort } = renderToPipeableStream(
+    const { abort, pipe } = renderToPipeableStream(
       <RemixServer context={remixContext} url={request.url} />,
       {
         onAllReady() {
@@ -34,13 +34,13 @@ function handleBotRequest(
 
           pipe(body)
         },
-        onShellError(error: unknown) {
-          reject(error)
-        },
         onError(error: unknown) {
           didError = true
 
           console.error(error)
+        },
+        onShellError(error: unknown) {
+          reject(error)
         },
       }
     )
@@ -59,9 +59,17 @@ function handleBrowserRequest(
     let didError = false
 
     // eslint-disable-next-line @typescript-eslint/unbound-method
-    const { pipe, abort } = renderToPipeableStream(
+    const { abort, pipe } = renderToPipeableStream(
       <RemixServer context={remixContext} url={request.url} />,
       {
+        onError(error: unknown) {
+          didError = true
+
+          console.error(error)
+        },
+        onShellError(err: unknown) {
+          reject(err)
+        },
         onShellReady() {
           const body = new PassThrough()
 
@@ -75,14 +83,6 @@ function handleBrowserRequest(
           )
 
           pipe(body)
-        },
-        onShellError(err: unknown) {
-          reject(err)
-        },
-        onError(error: unknown) {
-          didError = true
-
-          console.error(error)
         },
       }
     )

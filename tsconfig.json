@@ -5,7 +5,8 @@
     "**/*.tsx",
     "remix.config.js",
     "lint-staged.config.js",
-    ".eslintrc.js"
+    ".eslintrc.js",
+    "tailwind.config.js"
   ],
   "compilerOptions": {
     "skipLibCheck": true,
