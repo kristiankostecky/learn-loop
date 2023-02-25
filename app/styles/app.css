@@ -513,8 +513,45 @@ video {
   --tw-backdrop-sepia:  ;
 }
 
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.max-w-lg {
+  max-width: 32rem;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
 .text-ellipsis {
   text-overflow: ellipsis;
+}
+
+.border-b-2 {
+  border-bottom-width: 2px;
+}
+
+.text-center {
+  text-align: center;
 }
 
 .text-base {
@@ -525,4 +562,8 @@ video {
 .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
+}
+
+.font-medium {
+  font-weight: 500;
 }

@@ -13,6 +13,7 @@ module.exports = {
     'eslint-plugin-sort-destructure-keys',
   ],
   rules: {
+    'react/button-has-type': 'off',
     'react/jsx-sort-props': 'error',
     'sort-destructure-keys/sort-destructure-keys': 'error',
     'sort-keys-fix/sort-keys-fix': 'error',
