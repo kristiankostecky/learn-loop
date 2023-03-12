@@ -13,6 +13,7 @@ module.exports = {
     'eslint-plugin-sort-destructure-keys',
   ],
   rules: {
+    '@typescript-eslint/no-throw-literal': 'off',
     'react/button-has-type': 'off',
     'react/jsx-sort-props': 'error',
     'sort-destructure-keys/sort-destructure-keys': 'error',

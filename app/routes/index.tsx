@@ -1,7 +1,10 @@
+import type { LoaderArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { prisma } from '~/db.server'
+import { requireUserId } from '~/utils/session.server'
 
-export async function loader() {
+export async function loader({ request }: LoaderArgs) {
+  await requireUserId(request)
   const cards = await prisma.card.findMany({
     select: { answer: true, question: true },
   })
@@ -11,7 +14,7 @@ export async function loader() {
 export default function Index() {
   const { cards } = useLoaderData<typeof loader>()
   return (
-    <main className="text-base">
+    <main className="mt-6 text-base">
       <h1 className="mb-4 text-center text-xl">Learn Loop</h1>
       <div className="mx-auto max-w-lg">
         <div className="mb-2 flex justify-between border-b-2 ">
