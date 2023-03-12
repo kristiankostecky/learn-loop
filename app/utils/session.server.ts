@@ -4,6 +4,13 @@ import { ROUTES } from '~/constants'
 import { prisma } from '~/db.server'
 
 const SESSION_USER_ID = 'userId'
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  maxAge: 1000 * 60 * 60 * 7, // one week
+  name: 'learn_loop_session',
+  path: '/',
+  secure: true,
+}
 const { SESSION_SECRET } = process.env
 
 if (!SESSION_SECRET) {
@@ -34,13 +41,7 @@ export async function login({
 }
 
 export const storage = createCookieSessionStorage({
-  cookie: {
-    httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 7, // one week
-    name: 'learn_loop_session',
-    path: '/',
-    secure: true,
-  },
+  cookie: COOKIE_OPTIONS,
 })
 
 export async function logout(request: Request) {
@@ -50,21 +51,35 @@ export async function logout(request: Request) {
   })
 }
 
-export async function createUserSession(userId: string, redirectTo: string) {
+export async function createUserSession(
+  userId: string,
+  redirectTo: string,
+  remember = false
+) {
   const session = await storage.getSession()
   session.set(SESSION_USER_ID, userId)
 
   return redirect(redirectTo, {
-    headers: { 'Set-Cookie': await storage.commitSession(session) },
+    headers: {
+      'Set-Cookie': await storage.commitSession(session, {
+        maxAge: remember ? COOKIE_OPTIONS.maxAge : undefined,
+      }),
+    },
   })
+}
+
+export async function getSessionUserId(request: Request) {
+  const session = await storage.getSession(request.headers.get('Cookie'))
+  const userId: string = session.get(SESSION_USER_ID)
+
+  return { userId }
 }
 
 export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
 ) {
-  const session = await storage.getSession(request.headers.get('Cookie'))
-  const userId: string = session.get(SESSION_USER_ID)
+  const { userId } = await getSessionUserId(request)
   if (!userId) {
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]])
 

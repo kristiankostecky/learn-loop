@@ -14,20 +14,22 @@ export async function loader({ request }: LoaderArgs) {
 export default function Index() {
   const { cards } = useLoaderData<typeof loader>()
   return (
-    <main className="mt-6 text-base">
-      <h1 className="mb-4 text-center text-xl">Learn Loop</h1>
-      <div className="mx-auto max-w-lg">
-        <div className="mb-2 flex justify-between border-b-2 ">
-          <div className="mr-1 font-medium">Question</div>
-          <div className="font-medium">Answer</div>
-        </div>
-        {cards.map((card) => (
-          <div className="mb-2 flex justify-between ">
-            <div className="mr-1">{card.question}</div>
-            <div>{card.answer} </div>
+    <div className="mx-auto flex h-full max-w-2xl items-center justify-center ">
+      <div className="rounded-xl border border-slate-100 bg-white px-16 py-8 shadow-sm">
+        <h1 className="mb-6 text-center text-2xl font-bold">Learning deck</h1>
+        <div className="mx-auto max-w-lg">
+          <div className="mb-2 flex justify-between border-b-2 ">
+            <div className="mr-1 font-medium">Question</div>
+            <div className="font-medium">Answer</div>
           </div>
-        ))}
+          {cards.map((card) => (
+            <div key={card.question} className="mb-2 flex justify-between ">
+              <div className="mr-1">{card.question}</div>
+              <div>{card.answer} </div>
+            </div>
+          ))}
+        </div>
       </div>
-    </main>
+    </div>
   )
 }
