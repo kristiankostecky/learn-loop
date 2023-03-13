@@ -1,7 +1,17 @@
+import type {
+  CookieSerializeOptions,
+  SessionIdStorageStrategy,
+} from '@remix-run/node'
 import { createCookieSessionStorage, redirect } from '@remix-run/node'
 import bcrypt from 'bcrypt'
 import { ROUTES } from '~/constants'
 import { prisma } from '~/db.server'
+
+const { SESSION_SECRET } = process.env
+
+if (!SESSION_SECRET) {
+  throw new Error('SESSION_SECRET is not set')
+}
 
 const SESSION_USER_ID = 'userId'
 const COOKIE_OPTIONS = {
@@ -9,13 +19,9 @@ const COOKIE_OPTIONS = {
   maxAge: 1000 * 60 * 60 * 7, // one week
   name: 'learn_loop_session',
   path: '/',
+  secrets: [SESSION_SECRET],
   secure: true,
-}
-const { SESSION_SECRET } = process.env
-
-if (!SESSION_SECRET) {
-  throw new Error('SESSION_SECRET is not set')
-}
+} satisfies CookieSerializeOptions & SessionIdStorageStrategy['cookie']
 
 export async function login({
   password,
