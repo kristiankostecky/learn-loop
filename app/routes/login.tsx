@@ -1,6 +1,6 @@
 import type { ActionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { Form, Link, useActionData, useTransition } from '@remix-run/react'
+import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { Button } from '~/components/button'
@@ -10,9 +10,17 @@ import { createUserSession, login } from '~/utils/session.server'
 import { checkbox, keysFromZodObject } from '~/utils/validation'
 
 const PASSWORD_MIN_LENGTH = 6
-const USERNAME_MIN_LENGTH = 1
+const EMAIL_MIN_LENGTH = 5
 
 const LoginSchema = z.object({
+  email: z
+    .string()
+    .email('Please enter a valid email address')
+    .min(
+      EMAIL_MIN_LENGTH,
+      `Email must be at least ${EMAIL_MIN_LENGTH} characters`
+    )
+    .trim(),
   password: z
     .string()
     .min(
@@ -20,13 +28,6 @@ const LoginSchema = z.object({
       `Password must be at least ${PASSWORD_MIN_LENGTH} characters`
     ),
   'remember-me': checkbox(),
-  username: z
-    .string()
-    .min(
-      USERNAME_MIN_LENGTH,
-      `Username must be at least ${USERNAME_MIN_LENGTH} characters`
-    )
-    .trim(),
 })
 
 const fields = keysFromZodObject(LoginSchema)
@@ -53,7 +54,7 @@ export async function action({ request }: ActionArgs) {
 
 export default function Login() {
   const actionData = useActionData<typeof action>()
-  const transition = useTransition()
+  const transition = useNavigation()
   const isSubmitting = transition.state === 'submitting'
 
   return (
@@ -67,18 +68,18 @@ export default function Login() {
             <Label
               aria-readonly={isSubmitting}
               className="sr-only"
-              htmlFor={fields.username}
+              htmlFor={fields.email}
             >
-              Username
+              Email
             </Label>
             <Input
-              autoComplete="username"
+              autoComplete="email"
               className="rounded-b-none"
               disabled={isSubmitting}
-              id={fields.username}
-              minLength={USERNAME_MIN_LENGTH}
-              name={fields.username}
-              placeholder="Username"
+              id={fields.email}
+              minLength={EMAIL_MIN_LENGTH}
+              name={fields.email}
+              placeholder="Email"
               required
               type="text"
             />

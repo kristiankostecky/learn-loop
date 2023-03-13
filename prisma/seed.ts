@@ -27,7 +27,11 @@ const getCards = (userId: string): Array<Prisma.CardCreateArgs['data']> => {
 async function seed() {
   const hash = await bcrypt.hash('password', 10)
   const user = await prisma.user.create({
-    data: { password: { create: { hash } }, username: 'john' },
+    data: {
+      email: 'john@doe.com',
+      password: { create: { hash } },
+      username: 'john',
+    },
   })
 
   await Promise.all(

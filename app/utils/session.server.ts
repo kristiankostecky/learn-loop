@@ -24,15 +24,15 @@ const COOKIE_OPTIONS = {
 } satisfies CookieSerializeOptions & SessionIdStorageStrategy['cookie']
 
 export async function login({
+  email,
   password,
-  username,
 }: {
+  email: string
   password: string
-  username: string
 }) {
   const userWithPassword = await prisma.user.findUnique({
     include: { password: true },
-    where: { username },
+    where: { email },
   })
   if (!userWithPassword || !userWithPassword.password?.hash) {
     return null
