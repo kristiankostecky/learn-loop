@@ -10,14 +10,14 @@ import {
 } from '@remix-run/react'
 import { Navbar } from './components/navbar'
 import styles from './styles/app.css'
-import { getSessionUserId } from './utils/session.server'
+import { getUserIdFromSession } from './utils/session.server'
 
 export const links = () => {
   return [{ href: styles, rel: 'stylesheet' }]
 }
 
 export async function loader({ request }: LoaderArgs) {
-  const { userId } = await getSessionUserId(request)
+  const { userId } = await getUserIdFromSession(request)
   return { isLoggedIn: Boolean(userId) }
 }
 

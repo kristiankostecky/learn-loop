@@ -68,7 +68,7 @@ export async function createUserSession(
   })
 }
 
-export async function getSessionUserId(request: Request) {
+export async function getUserIdFromSession(request: Request) {
   const session = await storage.getSession(request.headers.get('Cookie'))
   const userId: string = session.get(SESSION_USER_ID)
 
@@ -79,7 +79,7 @@ export async function requireUserId(
   request: Request,
   redirectTo: string = new URL(request.url).pathname
 ) {
-  const { userId } = await getSessionUserId(request)
+  const { userId } = await getUserIdFromSession(request)
   if (!userId) {
     const searchParams = new URLSearchParams([['redirectTo', redirectTo]])
 
