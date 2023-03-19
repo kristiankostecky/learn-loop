@@ -6,6 +6,7 @@ import { createCookieSessionStorage, redirect } from '@remix-run/node'
 import bcrypt from 'bcrypt'
 import { ROUTES } from '~/constants'
 import { prisma } from '~/db.server'
+import type { User } from '@prisma/client'
 
 const { SESSION_SECRET } = process.env
 
@@ -26,10 +27,7 @@ const COOKIE_OPTIONS = {
 export async function login({
   email,
   password,
-}: {
-  email: string
-  password: string
-}) {
+}: Pick<User, 'email'> & { password: string }) {
   const userWithPassword = await prisma.user.findUnique({
     include: { password: true },
     where: { email },
@@ -92,4 +90,20 @@ export async function requireUserId(
     throw redirect(`${ROUTES.LOGIN}?${searchParams.toString()}`)
   }
   return userId
+}
+
+export async function signUp({
+  email,
+  password,
+  username,
+}: Pick<User, 'email' | 'username'> & { password: string }) {
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password: { create: { hash: await bcrypt.hash(password, 10) } },
+      username,
+    },
+  })
+
+  return user
 }

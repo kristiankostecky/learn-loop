@@ -6,26 +6,29 @@ import { zx } from 'zodix'
 import { Button } from '~/components/button'
 import { Checkbox, Input } from '~/components/input'
 import { Label } from '~/components/label'
-import { createUserSession, login } from '~/utils/session.server'
-import { checkbox, keysFromZodObject } from '~/utils/validation'
 
-const PASSWORD_MIN_LENGTH = 6
-const EMAIL_MIN_LENGTH = 5
+import { createUserSession, login } from '~/utils/session.server'
+import {
+  checkbox,
+  keysFromZodObject,
+  validationErrorMessage,
+  validationRules,
+} from '~/utils/validation'
 
 const LoginSchema = z.object({
   email: z
     .string()
-    .email('Please enter a valid email address')
+    .email(validationErrorMessage('email').invalid)
     .min(
-      EMAIL_MIN_LENGTH,
-      `Email must be at least ${EMAIL_MIN_LENGTH} characters`
+      validationRules.email.minLength,
+      validationErrorMessage('email').minLength()
     )
     .trim(),
   password: z
     .string()
     .min(
-      PASSWORD_MIN_LENGTH,
-      `Password must be at least ${PASSWORD_MIN_LENGTH} characters`
+      validationRules.password.minLength,
+      validationErrorMessage('password').minLength()
     ),
   'remember-me': checkbox(),
 })
@@ -63,7 +66,7 @@ export default function Login() {
         <h1 className="mb-8 text-center text-2xl font-medium">
           Sign in to Learn Loop
         </h1>
-        <Form aria-disabled="true" method="post">
+        <Form method="post">
           <div className="-space-y-px rounded-md shadow-sm">
             <Label
               aria-readonly={isSubmitting}
@@ -77,11 +80,11 @@ export default function Login() {
               className="rounded-b-none"
               disabled={isSubmitting}
               id={fields.email}
-              minLength={EMAIL_MIN_LENGTH}
+              minLength={validationRules.email.minLength}
               name={fields.email}
               placeholder="Email"
               required
-              type="text"
+              type="email"
             />
             <Label
               aria-readonly={isSubmitting}
@@ -95,7 +98,7 @@ export default function Login() {
               className="rounded-t-none"
               disabled={isSubmitting}
               id={fields.password}
-              minLength={PASSWORD_MIN_LENGTH}
+              minLength={validationRules.password.minLength}
               name={fields.password}
               placeholder="Password"
               required

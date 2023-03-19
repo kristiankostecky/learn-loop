@@ -4,9 +4,10 @@ import { prisma } from '~/db.server'
 import { requireUserId } from '~/utils/session.server'
 
 export async function loader({ request }: LoaderArgs) {
-  await requireUserId(request)
+  const userId = await requireUserId(request)
   const cards = await prisma.card.findMany({
     select: { answer: true, question: true },
+    where: { userId },
   })
   return { cards }
 }

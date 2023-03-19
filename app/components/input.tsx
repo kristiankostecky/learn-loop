@@ -1,17 +1,26 @@
 import clsx from 'clsx'
+import type { ReactNode } from 'react'
 
 type InputType = JSX.IntrinsicElements['input']
 
-type InputProps = InputType
+interface InputProps extends InputType {
+  invalid?: boolean
+}
 
-export function Input(inputProps: InputProps) {
+export function Input({ invalid, ...inputProps }: InputProps) {
   return (
     <input
       {...inputProps}
       className={clsx(
-        'relative block w-full rounded-md border-0 py-1.5 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-gray-400',
-        'focus:z-10 focus:ring-2 focus:ring-inset focus:ring-slate-600',
+        'relative block w-full rounded-md border-0 py-1.5  ring-1 ring-inset',
+        'focus:z-10 focus:ring-2 focus:ring-inset',
         'disabled:cursor-not-allowed disabled:opacity-50',
+        {
+          'text-slate-900 ring-slate-300 placeholder:text-gray-400 focus:ring-slate-600':
+            !invalid,
+          'z-10 text-red-900 ring-red-600 placeholder:text-red-400 focus:ring-red-600':
+            invalid,
+        },
         inputProps?.className
       )}
     />
@@ -36,4 +45,8 @@ export function Checkbox(inputProps: InputProps) {
       type="checkbox"
     />
   )
+}
+
+export function FieldError({ children }: { children: ReactNode }) {
+  return <p className="pb-1 text-xs text-red-600">{children}</p>
 }
