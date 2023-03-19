@@ -24,6 +24,27 @@ const COOKIE_OPTIONS = {
   secure: true,
 } satisfies CookieSerializeOptions & SessionIdStorageStrategy['cookie']
 
+export const storage = createCookieSessionStorage({
+  cookie: COOKIE_OPTIONS,
+})
+
+export async function createUserSession(
+  userId: string,
+  redirectTo: string,
+  remember = false
+) {
+  const session = await storage.getSession()
+  session.set(SESSION_USER_ID, userId)
+
+  return redirect(redirectTo, {
+    headers: {
+      'Set-Cookie': await storage.commitSession(session, {
+        maxAge: remember ? COOKIE_OPTIONS.maxAge : undefined,
+      }),
+    },
+  })
+}
+
 export async function login({
   email,
   password,
@@ -44,10 +65,6 @@ export async function login({
   return user
 }
 
-export const storage = createCookieSessionStorage({
-  cookie: COOKIE_OPTIONS,
-})
-
 export async function logout(request: Request) {
   const session = await storage.getSession(request.headers.get('Cookie'))
   return redirect(ROUTES.ROOT, {
@@ -55,21 +72,20 @@ export async function logout(request: Request) {
   })
 }
 
-export async function createUserSession(
-  userId: string,
-  redirectTo: string,
-  remember = false
-) {
-  const session = await storage.getSession()
-  session.set(SESSION_USER_ID, userId)
-
-  return redirect(redirectTo, {
-    headers: {
-      'Set-Cookie': await storage.commitSession(session, {
-        maxAge: remember ? COOKIE_OPTIONS.maxAge : undefined,
-      }),
+export async function signUp({
+  email,
+  password,
+  username,
+}: Pick<User, 'email' | 'username'> & { password: string }) {
+  const user = await prisma.user.create({
+    data: {
+      email,
+      password: { create: { hash: await bcrypt.hash(password, 10) } },
+      username,
     },
   })
+
+  return user
 }
 
 export async function getUserIdFromSession(request: Request) {
@@ -90,20 +106,4 @@ export async function requireUserId(
     throw redirect(`${ROUTES.LOGIN}?${searchParams.toString()}`)
   }
   return userId
-}
-
-export async function signUp({
-  email,
-  password,
-  username,
-}: Pick<User, 'email' | 'username'> & { password: string }) {
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: { create: { hash: await bcrypt.hash(password, 10) } },
-      username,
-    },
-  })
-
-  return user
 }

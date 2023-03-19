@@ -6,6 +6,7 @@ import { zx } from 'zodix'
 import { Button } from '~/components/button'
 import { Checkbox, Input } from '~/components/input'
 import { Label } from '~/components/label'
+import { ROUTES } from '~/constants'
 
 import { createUserSession, login } from '~/utils/session.server'
 import {
@@ -50,7 +51,7 @@ export async function action({ request }: ActionArgs) {
 
   return createUserSession(
     user.id,
-    '/',
+    ROUTES.ROOT,
     userCredentials.data[fields['remember-me']]
   )
 }
@@ -132,6 +133,15 @@ export default function Login() {
             Login
           </Button>
         </Form>
+        <div className="mt-6 flex w-full items-center justify-center text-sm text-slate-500">
+          Don&apos;t have an account?
+          <Link
+            className="ml-1 font-medium text-slate-900 hover:text-slate-600"
+            to={ROUTES.SIGNUP}
+          >
+            Sign up
+          </Link>
+        </div>
       </div>
     </div>
   )

@@ -9,6 +9,7 @@ import { Alert } from '~/components/alert'
 import { Button } from '~/components/button'
 import { FieldError, Input } from '~/components/input'
 import { Label } from '~/components/label'
+import { ROUTES } from '~/constants'
 import { formatPrismaError } from '~/utils/prisma-errors.server'
 import { getActionDataError } from '~/utils/remix'
 import { createUserSession, signUp } from '~/utils/session.server'
@@ -17,10 +18,6 @@ import {
   validationErrorMessage,
   validationRules,
 } from '~/utils/validation'
-
-const PASSWORD_MIN_LENGTH = 6
-const EMAIL_MIN_LENGTH = 5
-const USERNAME_MIN_LENGTH = 4
 
 const SignUpSchema = z.object({
   email: z
@@ -63,7 +60,6 @@ export async function action({ request }: ActionArgs) {
       const prismaError = formatPrismaError<keyof typeof userCredentials>(error)
       return json({ error: prismaError }, { status: 409 })
     }
-    // console.log(error)
     return json(
       { error: 'Something went wrong, please try again' },
       { status: 409 }
@@ -74,8 +70,8 @@ export async function action({ request }: ActionArgs) {
 export default function SignUp() {
   const actionData = useActionData<typeof action>()
   const transition = useNavigation()
-  const isSubmitting = transition.state === 'submitting'
   const [parent] = useAutoAnimate()
+  const isSubmitting = transition.state === 'submitting'
 
   const fieldErrorNode = (field: keyof z.infer<typeof SignUpSchema>) => {
     const error = getActionDataError(actionData, field)
@@ -105,7 +101,7 @@ export default function SignUp() {
               disabled={isSubmitting}
               id={fields.username}
               invalid={!!fieldErrorNode(fields.username)}
-              minLength={USERNAME_MIN_LENGTH}
+              minLength={validationRules.username.minLength}
               name={fields.username}
               placeholder="Username"
               required
@@ -125,7 +121,7 @@ export default function SignUp() {
               disabled={isSubmitting}
               id={fields.email}
               invalid={!!fieldErrorNode(fields.email)}
-              minLength={EMAIL_MIN_LENGTH}
+              minLength={validationRules.email.minLength}
               name={fields.email}
               placeholder="Email"
               required
@@ -145,7 +141,7 @@ export default function SignUp() {
               disabled={isSubmitting}
               id={fields.password}
               invalid={!!fieldErrorNode(fields.password)}
-              minLength={PASSWORD_MIN_LENGTH}
+              minLength={validationRules.password.minLength}
               name={fields.password}
               placeholder="Password"
               required
@@ -153,17 +149,18 @@ export default function SignUp() {
             />
             {fieldErrorNode(fields.password)}
           </div>
-          <div className="mt-6  text-center text-sm">
-            <Link
-              className="font-medium text-slate-600 hover:text-slate-500"
-              to="/"
-            >
-              Already have an account? Sign in
-            </Link>
-          </div>
           <Button className="mt-6 w-full" disabled={isSubmitting} type="submit">
             Sign Up
           </Button>
+          <div className="mt-6 flex w-full items-center justify-center text-sm text-slate-500">
+            Already have an account?
+            <Link
+              className="ml-1 font-medium text-slate-900 hover:text-slate-600"
+              to={ROUTES.LOGIN}
+            >
+              Sign in
+            </Link>
+          </div>
         </Form>
       </div>
     </div>
