@@ -1,36 +1,31 @@
-import type { LoaderArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
-import { prisma } from '~/db.server'
-import { requireUserId } from '~/utils/session.server'
-
-export async function loader({ request }: LoaderArgs) {
-  const userId = await requireUserId(request)
-  const cards = await prisma.card.findMany({
-    select: { answer: true, question: true },
-    where: { userId },
-  })
-  return { cards }
-}
+import { Link } from '@remix-run/react'
+import { ROUTES } from '~/constants'
 
 export default function Index() {
-  const { cards } = useLoaderData<typeof loader>()
   return (
-    <div className="mx-auto flex h-full max-w-2xl items-center justify-center ">
-      <div className="rounded-xl border border-slate-100 bg-white px-16 py-8 shadow-sm">
-        <h1 className="mb-6 text-center text-2xl font-bold">Learning deck</h1>
-        <div className="mx-auto max-w-lg">
-          <div className="mb-2 flex justify-between border-b-2 ">
-            <div className="mr-1 font-medium">Question</div>
-            <div className="font-medium">Answer</div>
-          </div>
-          {cards.map((card) => (
-            <div key={card.question} className="mb-2 flex justify-between ">
-              <div className="mr-1">{card.question}</div>
-              <div>{card.answer} </div>
-            </div>
-          ))}
+    <>
+      <header className="fixed top-0 flex h-14 w-full items-center bg-white px-4">
+        <nav className="flex w-full justify-between">
+          <Link className="text-black hover:no-underline" to={ROUTES.ROOT}>
+            Learn Loop
+          </Link>
+          <Link to={ROUTES.LOGIN}>Login</Link>
+        </nav>
+      </header>
+      <main className="mx-auto h-screen max-w-7xl px-4 pt-20 pb-16 text-center ">
+        <div>
+          <h1 className="text-center text-5xl font-bold">
+            Master any subject with ease using our{' '}
+            <span className="underline">spaced repetition</span> learning app
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg tracking-tight text-slate-700">
+            Our app uses the scientifically-proven spaced repetition method to
+            help you learn more efficiently and retain information for the
+            long-term. With customizable flashcards and progress tracking, you
+            can easily achieve your learning goals.
+          </p>
         </div>
-      </div>
-    </div>
+      </main>
+    </>
   )
 }

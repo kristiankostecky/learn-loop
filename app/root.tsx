@@ -1,4 +1,4 @@
-import type { LoaderArgs, MetaFunction } from '@remix-run/node'
+import type { MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -6,19 +6,27 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
 } from '@remix-run/react'
-import { Navbar } from './components/navbar'
 import styles from './styles/app.css'
-import { getUserIdFromSession } from './utils/session.server'
 
 export const links = () => {
-  return [{ href: styles, rel: 'stylesheet' }]
-}
-
-export async function loader({ request }: LoaderArgs) {
-  const { userId } = await getUserIdFromSession(request)
-  return { isLoggedIn: Boolean(userId) }
+  return [
+    { href: styles, rel: 'stylesheet' },
+    {
+      as: 'font',
+      crossOrigin: 'anonymous',
+      href: '/fonts/quicksand/quicksand-v30-latin-regular.woff2',
+      rel: 'preload',
+      type: 'font/woff2',
+    },
+    {
+      as: 'font',
+      crossOrigin: 'anonymous',
+      href: '/fonts/quicksand/quicksand-v30-latin-600.woff2',
+      rel: 'preload',
+      type: 'font/woff2',
+    },
+  ]
 }
 
 export const meta: MetaFunction = () => ({
@@ -28,18 +36,14 @@ export const meta: MetaFunction = () => ({
 })
 
 export default function App() {
-  const { isLoggedIn } = useLoaderData<typeof loader>()
   return (
     <html lang="en">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="bg-slate-50 text-slate-900">
-        <Navbar isLoggedIn={isLoggedIn} />
-        <main className="h-screen pt-16">
-          <Outlet />
-        </main>
+      <body className="font-quicksand">
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

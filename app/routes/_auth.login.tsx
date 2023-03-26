@@ -3,9 +3,9 @@ import { json } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
-import { Button } from '~/components/button'
-import { Checkbox, Input } from '~/components/input'
-import { Label } from '~/components/label'
+import { Button } from '~/components/Button'
+import { Checkbox, Input } from '~/components/Input'
+import { Label } from '~/components/Label'
 import { ROUTES } from '~/constants'
 
 import { createUserSession, login } from '~/utils/session.server'
@@ -51,7 +51,7 @@ export async function action({ request }: ActionArgs) {
 
   return createUserSession(
     user.id,
-    ROUTES.ROOT,
+    ROUTES.APP.ROOT,
     userCredentials.data[fields['remember-me']]
   )
 }
@@ -62,10 +62,10 @@ export default function Login() {
   const isSubmitting = transition.state === 'submitting'
 
   return (
-    <div className="flex h-full bg-slate-50">
+    <div className="flex h-full">
       <div className="mx-auto my-auto w-full max-w-md rounded-md p-4">
         <h1 className="mb-8 text-center text-2xl font-medium">
-          Sign in to Learn Loop
+          <span className="font-bold">Log in</span> to Learn Loop
         </h1>
         <Form method="post">
           <div className="-space-y-px rounded-md shadow-sm">
@@ -130,7 +130,7 @@ export default function Login() {
             </div>
           </div>
           <Button className="mt-6 w-full" disabled={isSubmitting} type="submit">
-            Login
+            Log in
           </Button>
         </Form>
         <div className="mt-6 flex w-full items-center justify-center text-sm text-slate-500">

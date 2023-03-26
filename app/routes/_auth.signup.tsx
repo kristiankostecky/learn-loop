@@ -5,10 +5,10 @@ import { json } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
-import { Alert } from '~/components/alert'
-import { Button } from '~/components/button'
-import { FieldError, Input } from '~/components/input'
-import { Label } from '~/components/label'
+import { Alert } from '~/components/Alert'
+import { Button } from '~/components/Button'
+import { FieldError, Input } from '~/components/Input'
+import { Label } from '~/components/Label'
 import { ROUTES } from '~/constants'
 import { formatPrismaError } from '~/utils/prisma-errors.server'
 import { getActionDataError } from '~/utils/remix'
@@ -72,7 +72,6 @@ export default function SignUp() {
   const transition = useNavigation()
   const [parent] = useAutoAnimate()
   const isSubmitting = transition.state === 'submitting'
-
   const fieldErrorNode = (field: keyof z.infer<typeof SignUpSchema>) => {
     const error = getActionDataError(actionData, field)
     return error ? <FieldError>{error}</FieldError> : null
@@ -80,11 +79,11 @@ export default function SignUp() {
   const generalError = getActionDataError(actionData)
 
   return (
-    <div className="flex h-full bg-slate-50">
+    <div className="flex h-full">
       {generalError && <Alert message={generalError} />}
       <div className="mx-auto my-auto w-full max-w-md rounded-md p-4">
-        <h1 className="mb-8 text-center text-2xl font-medium">
-          Sign up to Learn Loop
+        <h1 className="mb-8 text-center text-2xl">
+          <span className="font-bold">Sign up</span> to Learn Loop
         </h1>
         <Form method="post">
           <div ref={parent} className="-space-y-px rounded-md">
@@ -158,7 +157,7 @@ export default function SignUp() {
               className="ml-1 font-medium text-slate-900 hover:text-slate-600"
               to={ROUTES.LOGIN}
             >
-              Sign in
+              Log in
             </Link>
           </div>
         </Form>

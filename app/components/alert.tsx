@@ -1,7 +1,7 @@
 import { Transition } from '@headlessui/react'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
-import { Portal } from './portal'
+import { Portal } from './Portal'
 
 interface AlertProps {
   delay?: number
