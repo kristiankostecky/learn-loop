@@ -769,10 +769,6 @@ select {
   margin-top: 1.5rem;
 }
 
-.mb-auto {
-  margin-bottom: auto;
-}
-
 .mt-auto {
   margin-top: auto;
 }
@@ -867,10 +863,6 @@ select {
   flex-grow: 1;
 }
 
-.grow {
-  flex-grow: 1;
-}
-
 .-translate-y-full {
   --tw-translate-y: -100%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -952,22 +944,6 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.5rem * var(--tw-space-x-reverse));
   margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.place-self-end {
-  place-self: end;
-}
-
-.self-end {
-  align-self: flex-end;
-}
-
-.justify-self-start {
-  justify-self: start;
-}
-
-.justify-self-end {
-  justify-self: end;
 }
 
 .rounded {
