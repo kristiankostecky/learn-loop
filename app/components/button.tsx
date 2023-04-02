@@ -1,9 +1,11 @@
+import type { ComponentPropsWithoutRef, ElementType } from 'react'
 import React from 'react'
 import clsx from 'clsx'
 
 type ButtonElement = JSX.IntrinsicElements['button']
 
-interface ButtonProps extends ButtonElement {
+interface ButtonProps<T extends ElementType = 'button'> extends ButtonElement {
+  as?: T
   children: React.ReactNode
   leftIcon?: React.ReactNode
   rightIcon?: React.ReactNode
@@ -20,7 +22,8 @@ interface IconButtonProps
   icon?: React.ReactNode
 }
 
-export function Button({
+export function Button<T extends ElementType = 'button'>({
+  as,
   children,
   className,
   leftIcon,
@@ -28,9 +31,10 @@ export function Button({
   size = 'md',
   variant = 'primary',
   ...buttonProps
-}: ButtonProps) {
+}: ButtonProps<T> & ComponentPropsWithoutRef<T>) {
+  const Component = as || 'button'
   return (
-    <button
+    <Component
       className={clsx(
         'box-border flex content-center items-center justify-center space-x-2',
         'disabled:cursor-not-allowed disabled:opacity-40',
@@ -51,7 +55,7 @@ export function Button({
       {leftIcon && <i className="inline-block">{leftIcon}</i>}
       {children}
       {rightIcon && <i className="inline-block">{rightIcon}</i>}
-    </button>
+    </Component>
   )
 }
 

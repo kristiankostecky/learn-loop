@@ -1,6 +1,7 @@
 export const ROUTES = {
   APP: {
     DECKS: {
+      CARDS: (slug: string) => `/app/decks/${slug}/cards`,
       DETAIL: (slug: string) => `/app/decks/${slug}`,
       ROOT: '/app/decks',
     },
