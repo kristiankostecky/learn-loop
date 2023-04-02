@@ -1,14 +1,22 @@
 import type { LinkProps } from '@remix-run/react'
 import { Link } from '@remix-run/react'
 import clsx from 'clsx'
+import type { ElementType, ReactNode } from 'react'
 
 interface LinkBoxProps {
-  children: React.ReactNode
+  as?: ElementType
+  children: ReactNode
   className?: string
 }
 
-export function LinkBox({ children, className }: LinkBoxProps) {
-  return <div className={clsx('relative', className)}>{children}</div>
+export function LinkBox({
+  as: Component = 'div',
+  children,
+  className,
+}: LinkBoxProps) {
+  return (
+    <Component className={clsx('relative', className)}>{children}</Component>
+  )
 }
 
 export function LinkOverlay({ className, ...props }: LinkProps) {

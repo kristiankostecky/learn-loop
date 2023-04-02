@@ -35,6 +35,7 @@ model Password {
 
 model Deck {
   id          String   @id @default(uuid())
+  slug        String   @unique
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -46,10 +47,11 @@ model Deck {
 
 model Card {
   id        String   @id @default(uuid())
+  slug      String   @unique
   question  String
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Deck      Deck?    @relation(fields: [deckId], references: [id])
+  deck      Deck?    @relation(fields: [deckId], references: [id])
   deckId    String?
 }

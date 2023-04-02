@@ -1,5 +1,5 @@
-import type { ActionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import type { ActionArgs, LoaderArgs } from '@remix-run/node'
+import { redirect, json } from '@remix-run/node'
 import { Form, Link, useActionData, useNavigation } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
@@ -8,7 +8,11 @@ import { Checkbox, Input } from '~/components/Input'
 import { Label } from '~/components/Label'
 import { ROUTES } from '~/constants'
 
-import { createUserSession, login } from '~/utils/session.server'
+import {
+  createUserSession,
+  getUserIdFromSession,
+  login,
+} from '~/utils/session.server'
 import {
   checkbox,
   keysFromZodObject,
@@ -35,6 +39,14 @@ const LoginSchema = z.object({
 })
 
 const fields = keysFromZodObject(LoginSchema)
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const { userId } = await getUserIdFromSession(request)
+  if (userId) {
+    return redirect(ROUTES.APP.ROOT)
+  }
+  return null
+}
 
 export async function action({ request }: ActionArgs) {
   const errorResponse = json({ error: 'Wrong credentials' }, { status: 400 })
@@ -69,11 +81,7 @@ export default function Login() {
         </h1>
         <Form method="post">
           <div className="-space-y-px rounded-md shadow-sm">
-            <Label
-              aria-readonly={isSubmitting}
-              className="sr-only"
-              htmlFor={fields.email}
-            >
+            <Label className="sr-only" htmlFor={fields.email}>
               Email
             </Label>
             <Input
@@ -87,11 +95,7 @@ export default function Login() {
               required
               type="email"
             />
-            <Label
-              aria-readonly={isSubmitting}
-              className="sr-only"
-              htmlFor={fields.password}
-            >
+            <Label className="sr-only" htmlFor={fields.password}>
               Password
             </Label>
             <Input

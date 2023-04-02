@@ -87,11 +87,7 @@ export default function SignUp() {
         </h1>
         <Form method="post">
           <div ref={parent} className="-space-y-px rounded-md">
-            <Label
-              aria-readonly={isSubmitting}
-              className="sr-only"
-              htmlFor={fields.username}
-            >
+            <Label className="sr-only" htmlFor={fields.username}>
               Email
             </Label>
             <Input
@@ -107,11 +103,7 @@ export default function SignUp() {
               type="text"
             />
             {fieldErrorNode(fields.username)}
-            <Label
-              aria-readonly={isSubmitting}
-              className="sr-only"
-              htmlFor={fields.email}
-            >
+            <Label className="sr-only" htmlFor={fields.email}>
               Email
             </Label>
             <Input
@@ -127,11 +119,7 @@ export default function SignUp() {
               type="email"
             />
             {fieldErrorNode(fields.email)}
-            <Label
-              aria-readonly={isSubmitting}
-              className="sr-only"
-              htmlFor={fields.password}
-            >
+            <Label className="sr-only" htmlFor={fields.password}>
               Password
             </Label>
             <Input

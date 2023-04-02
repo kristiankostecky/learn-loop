@@ -12,16 +12,23 @@ const getDecks = (userId: string): Array<Prisma.DeckCreateArgs['data']> => {
           {
             answer: '48',
             question: 'What is the result of 8 multiplied by 6?',
+            slug: 'what-is-the-result-of-8-multiplied-by-6',
           },
           {
             answer: '12',
             question: 'If you subtract 13 from 25, what is the result?',
+            slug: 'if-you-subtract-13-from-25-what-is-the-result',
           },
-          { answer: '15', question: 'What is the sum of 2, 5, and 8?' },
+          {
+            answer: '15',
+            question: 'What is the sum of 2, 5, and 8?',
+            slug: 'what-is-the-sum-of-2-5-and-8',
+          },
         ],
       },
       description: 'Basic math operations',
       name: 'Math',
+      slug: 'math',
       userId,
     },
     {
@@ -30,21 +37,25 @@ const getDecks = (userId: string): Array<Prisma.DeckCreateArgs['data']> => {
           {
             answer: 'Avocado',
             question: 'What is the main ingredient in guacamole?',
+            slug: 'what-is-the-main-ingredient-in-guacamole',
           },
 
           {
             answer: 'Spaghetti',
             question: 'What type of pasta has the shape of long, thin tubes?',
+            slug: 'what-type-of-pasta-has-the-shape-of-long-thin-tubes',
           },
           {
             answer: "Donburi or 'don' for short.",
             question:
               'What is the Japanese dish made of sushi rice and various toppings called?',
+            slug: 'what-is-the-japanese-dish-made-of-sushi-rice-and-various-toppings-called',
           },
         ],
       },
       description: 'Common foods from around the world',
       name: 'Food',
+      slug: 'food',
       userId,
     },
     {
@@ -53,17 +64,24 @@ const getDecks = (userId: string): Array<Prisma.DeckCreateArgs['data']> => {
           {
             answer: 'Mount Kilimanjaro',
             question: 'What is the highest mountain in Africa?',
+            slug: 'what-is-the-highest-mountain-in-africa',
           },
           {
             answer: 'Vatican City',
             question:
               'Which country is both the smallest by land area and population?',
+            slug: 'which-country-is-both-the-smallest-by-land-area-and-population',
           },
-          { answer: 'Lima', question: 'What is the capital of Peru?' },
+          {
+            answer: 'Lima',
+            question: 'What is the capital of Peru?',
+            slug: 'what-is-the-capital-of-peru',
+          },
         ],
       },
       description: 'Facts about the world',
       name: 'Geography',
+      slug: 'geography',
       userId,
     },
   ]

@@ -1,4 +1,4 @@
-import type { MetaFunction } from '@remix-run/node'
+import type { V2_MetaFunction } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -29,11 +29,13 @@ export const links = () => {
   ]
 }
 
-export const meta: MetaFunction = () => ({
-  charset: 'utf-8',
-  title: 'New Remix App',
-  viewport: 'width=device-width,initial-scale=1',
-})
+export const meta: V2_MetaFunction = () => {
+  return [
+    { title: 'Learn Loop' },
+    { charset: 'utf-8' },
+    { viewport: 'width=device-width,initial-scale=1' },
+  ]
+}
 
 export default function App() {
   return (
