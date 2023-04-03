@@ -1,30 +1,37 @@
 import type { LoaderArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { BottomBar } from '~/components/BottomBar'
 import { Button } from '~/components/Button'
-import { Card } from '~/components/Card'
+import { ROUTES } from '~/constants'
 import { prisma } from '~/db.server'
 import { requireUserId } from '~/utils/session.server'
 
 const ParamsSchema = z.object({
-  slug: z.string(),
+  deck: z.string(),
 })
 
 export async function loader({ params, request }: LoaderArgs) {
   const userId = await requireUserId(request)
 
-  const { slug } = zx.parseParams(params, ParamsSchema)
+  const { deck: slug } = zx.parseParams(params, ParamsSchema)
   const deck = await prisma.deck.findFirstOrThrow({
     select: {
-      cards: { select: { answer: true, question: true, slug: true } },
+      description: true,
+      id: true,
       name: true,
+      slug: true,
     },
     where: { slug, userId },
   })
 
-  return { deck }
+  const cards = await prisma.card.aggregate({
+    _count: true,
+    where: { deckId: deck.id },
+  })
+
+  return { deck: { ...deck, cardsCount: cards._count } }
 }
 
 export const handle = {
@@ -35,20 +42,24 @@ export const handle = {
 
 export default function Deck() {
   const { deck } = useLoaderData<typeof loader>()
+
   return (
     <>
-      <div className="grid grid-cols-1 gap-2">
-        {deck.cards.map((card) => {
-          return (
-            <Card key={card.slug}>
-              <Card.Title>{card.question}</Card.Title>
-              <Card.Body>{card.answer}</Card.Body>
-            </Card>
-          )
-        })}
+      <div className="m-auto pb-32 text-center">
+        <p className="mb-2 text-lg font-bold">{deck.cardsCount} cards</p>
+        <p>{deck.description}</p>
       </div>
-      <BottomBar className="mt-auto">
-        <Button className="w-full">Create new card</Button>
+
+      <BottomBar>
+        <Button
+          as={Link}
+          className="block w-full"
+          to={ROUTES.APP.DECKS.CARDS(deck.slug)}
+          variant="secondary"
+        >
+          See all cards
+        </Button>
+        <Button className="mt-4 w-full">Start Quiz</Button>
       </BottomBar>
     </>
   )

@@ -52,6 +52,6 @@ model Card {
   answer    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  deck      Deck?    @relation(fields: [deckId], references: [id])
-  deckId    String?
+  deck      Deck     @relation(fields: [deckId], references: [id])
+  deckId    String
 }

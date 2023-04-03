@@ -29,7 +29,7 @@ export default function AppIndex() {
             return (
               <LinkBox key={deck.slug} as={Card} className="">
                 <h2 className="font-medium">
-                  <LinkOverlay to={ROUTES.APP.DECKS.DETAIL(deck.slug)}>
+                  <LinkOverlay to={ROUTES.APP.DECKS.DECK(deck.slug)}>
                     {deck.name}
                   </LinkOverlay>
                 </h2>

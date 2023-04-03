@@ -8,7 +8,7 @@ export function Navbar({ className, ...props }: NavbarProps) {
   return (
     <nav
       className={clsx(
-        'fixed top-0 flex h-16 w-full flex-wrap items-center justify-between border-b px-4',
+        'fixed top-0 z-10 flex h-16 w-full flex-wrap items-center justify-between border-b bg-white px-4',
         className
       )}
       {...props}

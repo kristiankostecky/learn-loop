@@ -30,11 +30,7 @@ export const links = () => {
 }
 
 export const meta: V2_MetaFunction = () => {
-  return [
-    { title: 'Learn Loop' },
-    { charset: 'utf-8' },
-    { viewport: 'width=device-width,initial-scale=1' },
-  ]
+  return [{ title: 'Learn Loop' }]
 }
 
 export default function App() {
@@ -42,6 +38,8 @@ export default function App() {
     <html lang="en">
       <head>
         <Meta />
+        <meta charSet="utf-8" />
+        <meta content="width=device-width,initial-scale=1" name="viewport" />
         <Links />
       </head>
       <body className="font-quicksand">
