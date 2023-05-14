@@ -1,5 +1,5 @@
 import type { LoaderArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { BottomBar } from '~/components/BottomBar'
@@ -53,7 +53,13 @@ export default function Deck() {
         })}
       </div>
       <BottomBar>
-        <Button className="w-full">Create new card</Button>
+        <Button
+          as={Link}
+          className="w-full"
+          to={ROUTES.APP.DECKS.NEW_CARD(deck.slug)}
+        >
+          Create new card
+        </Button>
       </BottomBar>
     </>
   )

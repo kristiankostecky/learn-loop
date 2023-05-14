@@ -1,10 +1,11 @@
 import type { LoaderArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import { z } from 'zod'
 import { zx } from 'zodix'
 import { BottomBar } from '~/components/BottomBar'
 import { Button } from '~/components/Button'
 import { Disclosure } from '~/components/Disclosure'
+import { ROUTES } from '~/constants'
 import { prisma } from '~/db.server'
 import { requireUserId } from '~/utils/session.server'
 
@@ -20,8 +21,9 @@ export async function loader({ params, request }: LoaderArgs) {
   const card = await prisma.card.findFirstOrThrow({
     select: {
       answer: true,
-      deck: { select: { name: true } },
+      deck: { select: { name: true, slug: true } },
       question: true,
+      slug: true,
     },
     where: { slug: cardSlug },
   })
@@ -69,7 +71,11 @@ export default function Deck() {
       </div>
 
       <BottomBar>
-        <Button className="w-full" variant="secondary">
+        <Button
+          as={Link}
+          className="w-full"
+          to={ROUTES.APP.DECKS.EDIT_CARD(card.deck.slug, card.slug)}
+        >
           Edit card
         </Button>
       </BottomBar>

@@ -74,7 +74,7 @@ export default function Login() {
   const isSubmitting = transition.state === 'submitting'
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-screen">
       <div className="mx-auto my-auto w-full max-w-md rounded-md p-4">
         <h1 className="mb-8 text-center text-2xl font-medium">
           <span className="font-bold">Log in</span> to Learn Loop
