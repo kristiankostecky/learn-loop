@@ -17,14 +17,14 @@ const ParamsSchema = z.object({
 export async function loader({ params, request }: LoaderArgs) {
   const userId = await requireUserId(request)
 
-  const { deck: slug } = zx.parseParams(params, ParamsSchema)
+  const { deck: id } = zx.parseParams(params, ParamsSchema)
   const deck = await prisma.deck.findFirstOrThrow({
     select: {
-      cards: { select: { answer: true, question: true, slug: true } },
+      cards: { select: { answer: true, id: true, question: true } },
+      id: true,
       name: true,
-      slug: true,
     },
-    where: { slug, userId },
+    where: { id, userId },
   })
 
   return { deck }
@@ -43,8 +43,8 @@ export default function Deck() {
       <div className="grid grid-cols-1 gap-2 pb-20">
         {deck.cards.map((card) => {
           return (
-            <LinkBox key={card.slug} as={Card}>
-              <LinkOverlay to={ROUTES.APP.DECKS.CARD(deck.slug, card.slug)}>
+            <LinkBox key={card.id} as={Card}>
+              <LinkOverlay to={ROUTES.APP.DECKS.CARD(deck.id, card.id)}>
                 <Card.Title>{card.question}</Card.Title>
               </LinkOverlay>
               <Card.Body>{card.answer}</Card.Body>
@@ -56,7 +56,7 @@ export default function Deck() {
         <Button
           as={Link}
           className="w-full"
-          to={ROUTES.APP.DECKS.NEW_CARD(deck.slug)}
+          to={ROUTES.APP.DECKS.NEW_CARD(deck.id)}
         >
           Create new card
         </Button>

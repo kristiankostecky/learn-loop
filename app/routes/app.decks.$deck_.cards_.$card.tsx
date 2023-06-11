@@ -17,15 +17,15 @@ const ParamsSchema = z.object({
 export async function loader({ params, request }: LoaderArgs) {
   await requireUserId(request)
 
-  const { card: cardSlug } = zx.parseParams(params, ParamsSchema)
+  const { card: cardId } = zx.parseParams(params, ParamsSchema)
   const card = await prisma.card.findFirstOrThrow({
     select: {
       answer: true,
-      deck: { select: { name: true, slug: true } },
+      deck: { select: { id: true, name: true } },
+      id: true,
       question: true,
-      slug: true,
     },
-    where: { slug: cardSlug },
+    where: { id: cardId },
   })
 
   return { card }
@@ -74,7 +74,7 @@ export default function Deck() {
         <Button
           as={Link}
           className="w-full"
-          to={ROUTES.APP.DECKS.EDIT_CARD(card.deck.slug, card.slug)}
+          to={ROUTES.APP.DECKS.EDIT_CARD(card.deck.id, card.id)}
         >
           Edit card
         </Button>

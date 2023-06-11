@@ -27,14 +27,14 @@ const fields = keysFromZodObject(EditCardSchema)
 export async function loader({ params, request }: LoaderArgs) {
   await requireUserId(request)
 
-  const { card: cardSlug } = zx.parseParams(params, ParamsSchema)
+  const { card: cardId } = zx.parseParams(params, ParamsSchema)
   const card = await prisma.card.findFirstOrThrow({
     select: {
       answer: true,
       deck: { select: { name: true } },
       question: true,
     },
-    where: { slug: cardSlug },
+    where: { id: cardId },
   })
 
   return { card }
@@ -42,10 +42,7 @@ export async function loader({ params, request }: LoaderArgs) {
 
 export async function action({ params, request }: ActionArgs) {
   await requireUserId(request)
-  const { card: cardSlug, deck: deckSlug } = zx.parseParams(
-    params,
-    ParamsSchema
-  )
+  const { card: cardId, deck: deckId } = zx.parseParams(params, ParamsSchema)
 
   const cardBody = await zx.parseFormSafe(request, EditCardSchema)
 
@@ -56,10 +53,10 @@ export async function action({ params, request }: ActionArgs) {
 
   await prisma.card.update({
     data: { answer: cardBody.data.answer, question: cardBody.data.question },
-    where: { slug: cardSlug },
+    where: { id: cardId },
   })
 
-  return redirect(ROUTES.APP.DECKS.CARD(deckSlug, cardSlug))
+  return redirect(ROUTES.APP.DECKS.CARD(deckId, cardId))
 }
 
 export const handle = {

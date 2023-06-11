@@ -35,7 +35,6 @@ model Password {
 
 model Deck {
   id          String   @id @default(uuid())
-  slug        String   @unique
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -47,7 +46,6 @@ model Deck {
 
 model Card {
   id        String   @id @default(uuid())
-  slug      String   @unique
   question  String
   answer    String
   createdAt DateTime @default(now())

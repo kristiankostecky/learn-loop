@@ -15,15 +15,14 @@ const ParamsSchema = z.object({
 export async function loader({ params, request }: LoaderArgs) {
   const userId = await requireUserId(request)
 
-  const { deck: slug } = zx.parseParams(params, ParamsSchema)
+  const { deck: id } = zx.parseParams(params, ParamsSchema)
   const deck = await prisma.deck.findFirstOrThrow({
     select: {
       description: true,
       id: true,
       name: true,
-      slug: true,
     },
-    where: { slug, userId },
+    where: { id, userId },
   })
 
   const cards = await prisma.card.aggregate({
@@ -54,7 +53,7 @@ export default function Deck() {
         <Button
           as={Link}
           className="block w-full"
-          to={ROUTES.APP.DECKS.CARDS(deck.slug)}
+          to={ROUTES.APP.DECKS.CARDS(deck.id)}
           variant="secondary"
         >
           See all cards

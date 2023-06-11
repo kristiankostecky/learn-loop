@@ -26,14 +26,14 @@ const fields = keysFromZodObject(NewCardSchema)
 export async function loader({ params, request }: LoaderArgs) {
   const userId = await requireUserId(request)
 
-  const { deck: slug } = zx.parseParams(params, ParamsSchema)
+  const { deck: id } = zx.parseParams(params, ParamsSchema)
   const deck = await prisma.deck.findFirstOrThrow({
     select: {
-      cards: { select: { answer: true, question: true, slug: true } },
+      cards: { select: { answer: true, id: true, question: true } },
+      id: true,
       name: true,
-      slug: true,
     },
-    where: { slug, userId },
+    where: { id, userId },
   })
 
   return { deck }
@@ -41,7 +41,7 @@ export async function loader({ params, request }: LoaderArgs) {
 
 export async function action({ params, request }: ActionArgs) {
   const userId = await requireUserId(request)
-  const { deck: slug } = zx.parseParams(params, ParamsSchema)
+  const { deck: id } = zx.parseParams(params, ParamsSchema)
 
   const cardBody = await zx.parseFormSafe(request, NewCardSchema)
 
@@ -51,7 +51,7 @@ export async function action({ params, request }: ActionArgs) {
   }
   const deck = await prisma.deck.findFirstOrThrow({
     select: { id: true },
-    where: { slug, userId },
+    where: { id, userId },
   })
 
   await prisma.card.create({
@@ -59,11 +59,10 @@ export async function action({ params, request }: ActionArgs) {
       answer: cardBody.data.answer,
       deck: { connect: { id: deck.id } },
       question: cardBody.data.question,
-      slug: cardBody.data.question.toLowerCase().replace(/\s/g, '-'),
     },
   })
 
-  return redirect(ROUTES.APP.DECKS.CARDS(slug))
+  return redirect(ROUTES.APP.DECKS.CARDS(id))
 }
 
 export const handle = {

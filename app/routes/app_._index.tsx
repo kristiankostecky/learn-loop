@@ -11,7 +11,7 @@ import { requireUserId } from '~/utils/session.server'
 export async function loader({ request }: LoaderArgs) {
   const userId = await requireUserId(request)
   const decks = await prisma.deck.findMany({
-    select: { description: true, name: true, slug: true },
+    select: { description: true, id: true, name: true },
     where: { userId },
   })
 
@@ -27,9 +27,9 @@ export default function AppIndex() {
         <div className="grid grid-cols-1 gap-2">
           {decks.map((deck) => {
             return (
-              <LinkBox key={deck.slug} as={Card} className="">
+              <LinkBox key={deck.id} as={Card} className="">
                 <h2 className="font-medium">
-                  <LinkOverlay to={ROUTES.APP.DECKS.DECK(deck.slug)}>
+                  <LinkOverlay to={ROUTES.APP.DECKS.DECK(deck.id)}>
                     {deck.name}
                   </LinkOverlay>
                 </h2>
